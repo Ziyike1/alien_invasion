@@ -9,6 +9,7 @@ class Ship:
 
         # 移动标志
         self.moving_right = False
+        self.moving_left = False
 
         # """加载飞船图像并获得其外接矩形"""
         self.image = pygame.image.load('images/ship.bmp')
@@ -21,6 +22,9 @@ class Ship:
         """根据移动标志调整飞船的位置"""
         if self.moving_right:
             self.rect.x += 1
+
+        if self.moving_left:
+            self.rect.x -= 1
 
 
     def blitme(self):
