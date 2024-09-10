@@ -5,6 +5,7 @@ class Ship:
     def __init__(self,game):
         """初始化飞船并设置其初始位置"""
         self.screen = game.screen
+        self.settings = game.settings
         self.screen_rect = game.screen.get_rect()
 
         # 移动标志
@@ -18,13 +19,20 @@ class Ship:
         self.rect.midbottom = self.screen_rect.midbottom
         # self.rect.midbottom = (400,600)
 
+        # 在飞船的属性x中储存一个浮点数
+        self.x = float(self.rect.x)
+
     def update(self):
         """根据移动标志调整飞船的位置"""
-        if self.moving_right:
-            self.rect.x += 1
+        # 使用浮点数x的值来更新飞船位置
+        if self.moving_right and self.rect.right < self.screen_rect.right:
+            self.x += self.settings.ship_speed
 
-        if self.moving_left:
-            self.rect.x -= 1
+        if self.moving_left and self.rect.left > 0:
+            self.x -= self.settings.ship_speed
+
+        # 根据self.x更行rect对象
+        self.rect.x = self.x
 
 
     def blitme(self):
