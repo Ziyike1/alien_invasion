@@ -2,16 +2,25 @@ import pygame
 
 class Ship:
     """管理飞船的类"""
-    def __init__(self,ai_game):
+    def __init__(self,game):
         """初始化飞船并设置其初始位置"""
-        self.screen = ai_game.screen
-        self.screen_rect = ai_game.screen.get_rect()
+        self.screen = game.screen
+        self.screen_rect = game.screen.get_rect()
 
-        """加载飞船图像并获得其外接矩形"""
+        # 移动标志
+        self.moving_right = False
+
+        # """加载飞船图像并获得其外接矩形"""
         self.image = pygame.image.load('images/ship.bmp')
         self.rect = self.image.get_rect()
 
         self.rect.midbottom = self.screen_rect.midbottom
+        # self.rect.midbottom = (400,600)
+
+    def update(self):
+        """根据移动标志调整飞船的位置"""
+        if self.moving_right:
+            self.rect.x += 1
 
 
     def blitme(self):
