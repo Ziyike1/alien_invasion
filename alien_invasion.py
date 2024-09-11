@@ -1,9 +1,10 @@
 import sys
+
 import pygame
 
+from bullet import Bullet
 from settings import Settings
 from ship import Ship
-from bullet import Bullet
 
 
 class AlienInvasion:
@@ -29,9 +30,16 @@ class AlienInvasion:
         while True:
             self._check_events()
             self.ship.update()
+            self._update_bullet()
             self._update_events()
-            self.bullets.update()
             self.clock.tick(60)
+
+    def _update_bullet(self):
+        """更新子弹的位置并消除消失的子弹"""
+        self.bullets.update()
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
 
     def _check_events(self):
         """倾听键盘和鼠标事件"""
@@ -71,8 +79,9 @@ class AlienInvasion:
 
     def fire_bullet(self):
         """创建一颗子弹，并将其加入编组bullets"""
-        new_bullet = Bullet(self)
-        self.bullets.add(new_bullet)
+        if len(self.bullets) < self.settings.bullet_allowed:
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)
 
 if __name__ == '__main__':
     # """创建游戏实例并运行游戏"""
