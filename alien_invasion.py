@@ -1,10 +1,12 @@
 import sys
+from logging import addLevelName
 
 import pygame
 
 from bullet import Bullet
 from settings import Settings
 from ship import Ship
+from alien import Alien
 
 
 class AlienInvasion:
@@ -23,6 +25,8 @@ class AlienInvasion:
         pygame.display.set_caption('Alien Invasion')
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+        self._create_fleet()
 
 
     def run_game(self):
@@ -75,6 +79,7 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.ship.blitme()
+        self.aliens.draw(self.screen)
         pygame.display.flip()
 
     def fire_bullet(self):
@@ -82,6 +87,21 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullet_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+
+    def _create_fleet(self):
+        """创建一个外星人舰队"""
+        alien = Alien(self)
+        self.aliens.add(alien)
+
+        count = 0
+        while count < 7:
+            new_alien = Alien(self)
+            new_alien.x = alien.x + (count*100)
+            new_alien.rect.x = new_alien.x
+            self.aliens.add(new_alien)
+            count += 1
+            print(count)
+
 
 if __name__ == '__main__':
     # """创建游戏实例并运行游戏"""
