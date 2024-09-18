@@ -34,6 +34,7 @@ class AlienInvasion:
             self._check_events()
             self.ship.update()
             self._update_bullet()
+            self._update_aliens()
             self._update_events()
             self.clock.tick(60)
 
@@ -121,6 +122,24 @@ class AlienInvasion:
         new_alien.rect.x = x_position
         new_alien.rect.y = y_position
         self.aliens.add(new_alien)
+
+    def _update_aliens(self):
+        """更新舰队中所有外星人的位置"""
+        self._check_fleet_edges()
+        self.aliens.update()
+
+    def _check_fleet_edges(self):
+        """检测外星人碰撞屏幕边缘并采取相应措施"""
+        for alien in self.aliens.sprites():
+            if alien.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """向下移动整个外星人舰队，并改变方向"""
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.drop_speed
+        self.settings.fleet_direction *= -1
 
 
 if __name__ == '__main__':
