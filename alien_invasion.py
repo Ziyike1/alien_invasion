@@ -45,6 +45,14 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+        # 检查是否有子弹击中了外星人, 并删除相应的子弹和外星人
+        collisions = pygame.sprite.groupcollide(self.bullets,self.aliens,False,True)
+
+        # 删除现有的子弹并创建新的外星舰队
+        if not self.aliens:
+            self.bullets.empty()
+            self._create_fleet()
+
     def _check_events(self):
         """倾听键盘和鼠标事件"""
         for event in pygame.event.get():
