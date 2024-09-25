@@ -32,14 +32,20 @@ class AlienInvasion:
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
 
+        # 游戏启动后设置为Ture
+        self.game_active = True
+
 
     def run_game(self):
         """开始游戏主循环"""
         while True:
             self._check_events()
-            self.ship.update()
-            self._update_bullet()
-            self._update_aliens()
+
+            if self.game_active:
+                self.ship.update()
+                self._update_bullet()
+                self._update_aliens()
+
             self._update_events()
             self.clock.tick(60)
 
@@ -146,7 +152,10 @@ class AlienInvasion:
 
         # 检测外星人和飞船之间的碰撞
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
-             print("Ship hit!!!")
+             self._ship_hit()
+
+        # 检测是否有外星人碰撞屏幕下边缘
+        self._check_hit_bottom()
 
 
     def _check_fleet_edges(self):
@@ -163,8 +172,29 @@ class AlienInvasion:
         self.settings.fleet_direction *= -1
 
     def _ship_hit(self):
-        #TODO
-        return
+        """响应飞船和外星人的碰撞"""
+
+        if self.stats.ship_remains > 0:
+            self.stats.ship_remains -= 1
+            self.bullets.empty()
+            self.aliens.empty()
+
+            # 创建一个新的外星舰队
+            self._create_fleet()
+            self.ship.center_ship()
+
+            # 暂停一段时间
+            sleep(2)
+
+        else:
+            self.game_active = False
+
+    def _check_hit_bottom(self):
+        """响应外星人碰撞屏幕的下边缘"""
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom > self.settings.screen_height + 10:
+                self._ship_hit()
+                break
 
 
 if __name__ == '__main__':
