@@ -62,9 +62,16 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
 
     def _check_keydown_events(self, event):
         """响应按下"""
+
+        if event.key == pygame.K_p and not self.game_active:
+            self._start_game()
+
         if event.key == pygame.K_RIGHT:
             self.ship.moving_right = True
         elif event.key == pygame.K_LEFT:
@@ -198,6 +205,7 @@ class AlienInvasion:
 
         else:
             self.game_active = False
+            pygame.mouse.set_visible(True)
 
     def _check_hit_bottom(self):
         """响应外星人碰撞屏幕的下边缘"""
@@ -205,6 +213,28 @@ class AlienInvasion:
             if alien.rect.bottom > self.settings.screen_height + 10:
                 self._ship_hit()
                 break
+
+    def _check_play_button(self, mouse_pos):
+        """点击play按钮时开始新游戏"""
+        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        if button_clicked and not self.game_active:
+            self._start_game()
+
+    def _start_game(self):
+        # 重置统计信息
+        self.stats.reset_stats()
+        self.game_active = True
+
+        # 清空外星人列表和子弹列表
+        self.bullets.empty()
+        self.aliens.empty()
+
+        # 创建一个新的外星舰队
+        self._create_fleet()
+        self.ship.center_ship()
+
+        # 隐藏光标
+        pygame.mouse.set_visible(False)
 
 
 if __name__ == '__main__':
