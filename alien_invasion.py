@@ -125,6 +125,7 @@ class AlienInvasion:
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
+            self.settings.increase_speed()
 
     def _create_alien(self, x_position, y_position):
         """创建一个外星人并将其加入舰队中"""
@@ -221,6 +222,11 @@ class AlienInvasion:
             self._start_game()
 
     def _start_game(self):
+        """开始新游戏时的设置"""
+
+        # 还原游戏设置
+        self.settings.initialize_dynamic_settings()
+
         # 重置统计信息
         self.stats.reset_stats()
         self.game_active = True
