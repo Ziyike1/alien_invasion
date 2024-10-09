@@ -120,11 +120,17 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
-        self._check_collisions()
+        self._check_bullets_alien_collisions()
 
-    def _check_collisions(self):
+    def _check_bullets_alien_collisions(self):
         # 检查是否有子弹击中了外星人, 并删除相应的子弹和外星人
         collisions = pygame.sprite.groupcollide(self.bullets,self.aliens,False,True)
+
+        if collisions:
+            for alien in collisions.values():
+                self.stats.score += self.settings.alien_point * len(alien)
+            self.scoreboard.prep_score()
+            self.scoreboard.check_high_score()
 
         # 删除现有的子弹并创建新的外星舰队
         if not self.aliens:
@@ -234,6 +240,7 @@ class AlienInvasion:
 
         # 重置统计信息
         self.stats.reset_stats()
+        self.scoreboard.prep_score()
         self.game_active = True
 
         # 清空外星人列表和子弹列表

@@ -23,6 +23,7 @@ class Settings:
 
         # 游戏难度递增
         self.speedup_scale = 1.1
+        self.score_scale = 1.5
 
         self.initialize_dynamic_settings()
 
@@ -34,8 +35,12 @@ class Settings:
 
         self.fleet_direction = 1
 
+        # 计分设置
+        self.alien_point = 50
+
     def increase_speed(self):
         """提高游戏难度"""
         self.ship_speed *= self.speedup_scale
         self.bullet_speed *= self.speedup_scale
         self.alien_speed *= self.speedup_scale
+        self.alien_point = int(self.alien_point * self.score_scale)
