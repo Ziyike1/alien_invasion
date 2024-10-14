@@ -15,8 +15,8 @@ class Bullet(Sprite):
         # 在(0,0)处创建一个子弹的矩形，在设置正确的位置
         self.rect = pygame.Rect(0,0,self.settings.bullet_width,self.settings.bullet_height)
         self.rect.midtop = game.ship.rect.midtop
-
         self.y = float(self.rect.y)
+        self.y -= 30
 
     def update(self):
         """向上移动子弹"""

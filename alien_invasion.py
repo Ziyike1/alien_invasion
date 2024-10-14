@@ -1,6 +1,8 @@
 import sys
+from importlib.resources import contents
 from time import sleep
 import pygame
+from pathlib import Path
 
 from bullet import Bullet
 from settings import Settings
@@ -51,6 +53,7 @@ class AlienInvasion:
                 self.ship.update()
                 self._update_bullet()
                 self._update_aliens()
+                self.save_score_in_txt()
 
             self._update_events()
             self.clock.tick(60)
@@ -117,7 +120,7 @@ class AlienInvasion:
         """更新子弹的位置并消除消失的子弹"""
         self.bullets.update()
         for bullet in self.bullets.copy():
-            if bullet.rect.bottom <= 0:
+            if bullet.rect.bottom <= 80:
                 self.bullets.remove(bullet)
 
         self._check_bullets_alien_collisions()
@@ -209,6 +212,7 @@ class AlienInvasion:
 
         if self.stats.ship_remains > 0:
             self.stats.ship_remains -= 1
+            self.scoreboard.prep_ships()
             self.bullets.empty()
             self.aliens.empty()
 
@@ -247,6 +251,7 @@ class AlienInvasion:
         self.stats.reset_stats()
         self.scoreboard.prep_score()
         self.scoreboard.prep_level()
+        self.scoreboard.prep_ships()
         self.game_active = True
 
         # 清空外星人列表和子弹列表
@@ -259,6 +264,11 @@ class AlienInvasion:
 
         # 隐藏光标
         pygame.mouse.set_visible(False)
+
+    def save_score_in_txt(self):
+        """将最高分写入进txt文件"""
+        with open('highest_score.txt', 'w', encoding='utf-8') as file:
+            file.write(self.scoreboard.get_the_highest_score())
 
 
 if __name__ == '__main__':
